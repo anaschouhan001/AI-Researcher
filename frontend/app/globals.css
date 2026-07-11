@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-pink-50 text-pink-950 antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249, 73, 140, 0.18), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(244, 114, 182, 0.14), transparent),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(251, 207, 232, 0.5), transparent),
+    linear-gradient(180deg, #fff0f6 0%, #ffe4ef 50%, #ffeef5 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Cute pink scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.pink.300");
+  border-radius: 9999px;
+  border: 2px solid theme("colors.pink.50");
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme("colors.pink.400");
+}
+
+::selection {
+  background: theme("colors.pink.300");
+  color: theme("colors.pink.950");
+}
+
+@layer components {
+  .glass {
+    @apply border border-pink-200/80 bg-white/70 backdrop-blur-md shadow-candy;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-pink-500 via-fuchsia-400 to-rose-400 bg-clip-text text-transparent;
+  }
+
+  .candy-border {
+    @apply border-2 border-pink-200 rounded-3xl;
+  }
+}
+
+/* Floating hearts background decoration */
+.hearts-bg {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.hearts-bg span {
+  position: absolute;
+  font-size: 1.1rem;
+  opacity: 0.35;
+  animation: heart-rise 14s linear infinite;
+}
+@keyframes heart-rise {
+  0% {
+    transform: translateY(105vh) scale(0.7) rotate(-8deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.4;
+  }
+  88% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(-8vh) scale(1.1) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Rendered markdown (report tab)                                      */
+/* ------------------------------------------------------------------ */
+.markdown-body {
+  @apply text-sm leading-7 text-pink-950/90;
+}
+.markdown-body > *:first-child {
+  margin-top: 0;
+}
+.markdown-body h1 {
+  @apply mt-8 mb-4 text-2xl font-bold text-pink-700 border-b-2 border-pink-200 pb-2;
+}
+.markdown-body h2 {
+  @apply mt-8 mb-3 text-xl font-semibold text-pink-700;
+}
+.markdown-body h3 {
+  @apply mt-6 mb-2 text-lg font-semibold text-pink-600;
+}
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  @apply mt-5 mb-2 text-base font-semibold text-pink-800;
+}
+.markdown-body p {
+  @apply my-3;
+}
+.markdown-body a {
+  @apply text-fuchsia-600 underline underline-offset-2 hover:text-fuchsia-500;
+}
+.markdown-body strong {
+  @apply font-semibold text-pink-800;
+}
+.markdown-body ul {
+  @apply my-3 list-disc pl-6 space-y-1 marker:text-pink-400;
+}
+.markdown-body ol {
+  @apply my-3 list-decimal pl-6 space-y-1 marker:text-pink-400;
+}
+.markdown-body blockquote {
+  @apply my-4 border-l-4 border-pink-400/60 bg-pink-100/60 px-4 py-2 text-pink-800/80 italic rounded-r-lg;
+}
+.markdown-body code {
+  @apply rounded bg-pink-100 px-1.5 py-0.5 text-[0.85em] text-fuchsia-700;
+}
+.markdown-body pre {
+  @apply my-4 overflow-x-auto rounded-2xl border-2 border-pink-200 bg-white p-4;
+}
+.markdown-body pre code {
+  @apply bg-transparent p-0 text-pink-900;
+}
+.markdown-body hr {
+  @apply my-6 border-pink-200;
+}
+.markdown-body table {
+  @apply my-4 w-full border-collapse text-left;
+  display: block;
+  overflow-x: auto;
+}
+.markdown-body th {
+  @apply border-b-2 border-pink-300 px-3 py-2 font-semibold text-pink-800 bg-pink-100/80;
+}
+.markdown-body td {
+  @apply border-b border-pink-200 px-3 py-2 align-top;
+}
+.markdown-body img {
+  @apply max-w-full rounded-2xl border-2 border-pink-200;
+}
+
+/* ------------------------------------------------------------------ */
+/* React Flow pink chrome                                              */
+/* ------------------------------------------------------------------ */
+.react-flow__attribution {
+  background: transparent !important;
+}
+.react-flow__attribution a {
+  color: theme("colors.pink.300") !important;
+}
+.react-flow__controls {
+  box-shadow: none !important;
+}
+.react-flow__controls button {
+  background: theme("colors.pink.100") !important;
+  border-bottom: 1px solid theme("colors.pink.200") !important;
+  color: theme("colors.pink.700") !important;
+  fill: theme("colors.pink.700") !important;
+}
+.react-flow__controls button:hover {
+  background: theme("colors.pink.200") !important;
+}
+
+/* Mermaid SVG should never overflow its card */
+.mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}

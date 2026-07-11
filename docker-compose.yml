@@ -1,0 +1,75 @@
+version: "3.9"
+
+# SQLite lives on the shared `appdata` volume (/data/researchgpt.db) so the
+# API and the Celery worker see the same database.
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/researchgpt.db
+      SYNC_DATABASE_URL: sqlite:////data/researchgpt.db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      CHROMA_PERSIST_DIR: /data/chroma
+      STORAGE_DIR: /data/storage
+      USE_CELERY: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - appdata:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/researchgpt.db
+      SYNC_DATABASE_URL: sqlite:////data/researchgpt.db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      CHROMA_PERSIST_DIR: /data/chroma
+      STORAGE_DIR: /data/storage
+    volumes:
+      - appdata:/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=info --concurrency=2
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  redisdata:
+  appdata:

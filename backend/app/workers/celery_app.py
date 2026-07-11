@@ -1,0 +1,24 @@
+"""Celery application for background research execution."""
+from celery import Celery
+
+from app.core.config import get_settings
+
+settings = get_settings()
+
+celery_app = Celery(
+    "researchgpt",
+    broker=settings.celery_broker_url,
+    backend=settings.celery_result_backend,
+    include=["app.workers.tasks"],
+)
+
+celery_app.conf.update(
+    task_serializer="json",
+    result_serializer="json",
+    accept_content=["json"],
+    task_acks_late=True,
+    worker_prefetch_multiplier=1,       # research jobs are long; no hoarding
+    task_time_limit=60 * 30,            # hard kill at 30 min
+    task_soft_time_limit=60 * 25,
+    broker_connection_retry_on_startup=True,
+)
