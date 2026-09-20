@@ -22,7 +22,7 @@ Planner → Research → Retriever → Fact Checker → Writer → Visualization
 - **Fact verification** — cross-source claim checking, conflict detection with
   "likely correct" resolution, per-claim and overall confidence scores
 - **Visualizations** — charts built deterministically from real API data
-  (publication trends, GitHub stars, model downloads), LLM knowledge graph,
+  , LLM knowledge graph,
   Mermaid mind map
 - **Reports** — Markdown / HTML / PDF / DOCX with citations on every paragraph
 - **AI podcast** — two-host script voiced by Sarvam AI (English + Hindi)
